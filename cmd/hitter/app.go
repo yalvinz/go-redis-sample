@@ -4,8 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/yalvinz/go-helper/grace"
 	"github.com/yalvinz/go-helper/logging"
 	myconfig "github.com/yalvinz/go-redis-sample/config"
@@ -35,8 +35,14 @@ func main() {
 	}
 
 	// Initialize handlers
-	http.HandleFunc("/redisc/status", coreModule.GetClusterStatus)
-	http.HandleFunc("/redisc/get/", coreModule.GetKey)
+	r := mux.NewRouter()
+	r.HandleFunc("/redisc/status", coreModule.GetClusterStatus)
+	r.HandleFunc("/redisc/get/{key}", coreModule.DoRedisGetKey)
+	r.HandleFunc("/redisc/setex/{key}/{value}/{ttl}", coreModule.DoRedisSetexKey)
+	r.HandleFunc("/redisc/hget/{key}/{field}", coreModule.DoRedisHGetKey)
+	r.HandleFunc("/redisc/hset/{key}/{field}/{value}/{ttl}", coreModule.DoRedisHSetKey)
+	r.HandleFunc("/redisc/hmget/{key}", coreModule.DoRedisHMGetKey)
+	r.HandleFunc("/redisc/hmset/{key}/{ttl}", coreModule.DoRedisHMSetKey)
 
-	log.Fatal(grace.Serve(":9000", nil))
+	log.Fatal(grace.Serve(":9000", r))
 }
