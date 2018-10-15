@@ -17,6 +17,21 @@ func (cm *CoreModule) GetClusterStatus(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+func (cm *CoreModule) DoRedisDelKey(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	key := vars["key"]
+
+	err := cm.RediscCache.Del(key)
+	if err != nil {
+		log.Printf("Error delete key, err: %s", err)
+		return
+	}
+
+	log.Printf("Successfully delete key")
+
+	return
+}
+
 func (cm *CoreModule) DoRedisGetKey(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	key := vars["key"]

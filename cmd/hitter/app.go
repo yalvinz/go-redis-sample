@@ -37,6 +37,7 @@ func main() {
 	// Initialize handlers
 	r := mux.NewRouter()
 	r.HandleFunc("/redisc/status", coreModule.GetClusterStatus)
+	r.HandleFunc("/redisc/del/{key}", coreModule.DoRedisDelKey)
 	r.HandleFunc("/redisc/get/{key}", coreModule.DoRedisGetKey)
 	r.HandleFunc("/redisc/setex/{key}/{value}/{ttl}", coreModule.DoRedisSetexKey)
 	r.HandleFunc("/redisc/hget/{key}/{field}", coreModule.DoRedisHGetKey)
